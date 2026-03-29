@@ -279,3 +279,12 @@ Nenhum personagem pode ultrapassar esses valores base. Ajustes para balanceament
 - Não há suporte a multiplayer online nesta versão inicial.
 - Interface pode ser simples e focada em funcionalidade, não em arte final.
 - Balanceamento inicial pode ser ajustado em versões futuras.
+
+## Clarificações (Sessão 2026-03-29)
+- Turn Meter: avanço linear, velocidade = pontos por tick. Futuras versões podem alterar a fórmula.
+- Empate de velocidade: ordem fixa, primeiro quem está atacando (player), depois quem está defendendo (CPU).
+- Timer: se expirar durante uma ação, a ação é cancelada imediatamente e o resultado é o estado do momento (se não houver ganhador, é empate).
+- Tamanho dos decks e times: fixo — 8 personagens no deck, 4 no time (time sempre 4, deck pode mudar no futuro).
+- Composição dos decks: aleatório puro para MVP.
+- Ações disponíveis: apenas “Atacar” no MVP, mas a estrutura já prevê múltiplas ações no futuro.
+- Critério de empate: apenas timer (eliminação simultânea não é critério de empate).
