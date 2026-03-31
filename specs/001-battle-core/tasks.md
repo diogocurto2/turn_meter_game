@@ -39,12 +39,20 @@
 - [ ] T018 [P] [US2] Unit tests for team selection in /tests/TurnMeterGame.GameManager.Tests/TeamSelectionServiceTests.cs
 - [ ] TP4.1 [P] [US2] Implement team automatic selection logic in /src/TurnMeterGame.CLI/TeamSelectionService.cs 
 
+
 ## Phase 5: User Story 3 - Motor de Controle da Batalha (P0)
 
 - [ ] T019 [P] [US3] Create BattleEngine class in /src/TurnMeterGame.Battle/BattleEngine.cs
 - [ ] T020 [P] [US3] Implement turn order and battle state logic in /src/TurnMeterGame.Battle/BattleEngine.cs
 - [ ] T021 [P] [US3] Unit tests for BattleEngine in /tests/TurnMeterGame.Battle.Tests/BattleEngineTests.cs
 
+### BattleLog (Logging de Eventos)
+- [ ] T021.1 [P] [US3] Implement BattleLog class in /src/TurnMeterGame.Battle/BattleLog.cs
+- [ ] T021.2 [P] [US3] Define event format and log structure for BattleLog
+- [ ] T021.3 [P] [US3] Unit tests for BattleLog in /tests/TurnMeterGame.Battle.Tests/BattleLogTests.cs
+
+### Integração TurnMeter/BattleManager/Character
+- [ ] T021.4 [P] [US3/US5] Integration tests for TurnMeter, BattleManager, and Character in /tests/TurnMeterGame.Battle.Tests/BattleIntegrationTests.cs
 ## Phase 6: User Story 4 - Timer de Tempo Real da Batalha (P1)
 
 - [ ] T022 [P] [US4] Implement battle timer logic in /src/TurnMeterGame.Battle/BattleTimer.cs

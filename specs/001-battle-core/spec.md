@@ -27,16 +27,32 @@ Após visualizar os 5 times adversários gerados pela CPU, o jogador escolhe um 
 1. **Dado** que os 5 times adversários estão disponíveis, **Quando** o jogador escolhe um deles, **Então** esse time é definido como o adversário da partida.
 2. **Dado** que o jogador recebeu seu deck de 8 personagens, **Quando** monta seu time, **Então** só pode escolher 4 personagens distintos desse deck para formar seu time.
 
+
 ### User Story 3 - Motor de Controle da Batalha (Priority: P0)
-O sistema deve possuir um motor central de batalha responsável por orquestrar o fluxo do combate: avançar turnos, atualizar o turn meter, acionar a escolha de ações, processar ataques, verificar mortes, registrar logs e determinar o fim da batalha.
+O sistema deve possuir um motor central de batalha responsável por orquestrar o fluxo do combate: avançar turnos, atualizar o turn meter, acionar a escolha de ações, processar ataques, verificar mortes, registrar logs (BattleLog) e determinar o fim da batalha.
 
 **Por que essa prioridade**: Garante que todas as regras e etapas do combate sejam executadas de forma ordenada, robusta e previsível, evitando inconsistências e bugs de fluxo.
 
-**Teste Independente**: Ao iniciar uma batalha, o motor executa automaticamente todas as etapas do combate, do início ao fim, sem necessidade de intervenção manual entre as fases. para iniciar a batalha, o motor inicia com o time da cpu escolhida e com o time do usuario escolhido
+**Teste Independente**: Ao iniciar uma batalha, o motor executa automaticamente todas as etapas do combate, do início ao fim, sem necessidade de intervenção manual entre as fases. Para iniciar a batalha, o motor inicia com o time da CPU escolhida e com o time do usuário escolhido.
+
+**Critérios de Sucesso (mensuráveis):**
+- 100% dos eventos relevantes da batalha são registrados no BattleLog
+- O método ProximoParaAgir() do TurnMeter sempre retorna o personagem correto conforme o estado do TurnMeter
+- O ciclo de batalha executa do início ao fim sem intervenção manual
+
+**Exemplo de evento registrado no BattleLog:**
+```json
+{
+  "Timestamp": "2026-03-31T20:00:00Z",
+  "TipoEvento": "Ataque",
+  "Descricao": "Alice atacou Bob causando 120 de dano.",
+  "Dados": { "AtacanteId": 1, "AlvoId": 2, "Dano": 120 }
+}
+```
 
 **Cenários de Aceitação**:
-1. **Dado** que uma batalha foi iniciada, **Quando** o motor é acionado, **Então** ele executa o ciclo completo de turnos, ações, verificações e encerramento.
-2. **Dado** que ocorrem eventos como morte de personagem ou empate, **Quando** o motor processa o turno, **Então** ele atualiza corretamente o estado da batalha e aciona as regras apropriadas.
+1. **Dado** que uma batalha foi iniciada, **Quando** o motor é acionado, **Então** ele executa o ciclo completo de turnos, ações, verificações e encerramento, registrando todos os eventos no BattleLog.
+2. **Dado** que ocorrem eventos como morte de personagem ou empate, **Quando** o motor processa o turno, **Então** ele atualiza corretamente o estado da batalha, aciona as regras apropriadas e registra o evento correspondente no BattleLog.
 
 ### User Story 4 - Timer de Tempo Real da Batalha (Priority: P1)
 Ao iniciar a batalha, o sistema deve iniciar um timer de tempo real (padrão: 1 minuto e 20 segundos). Quando o tempo se esgota, o timer emite um aviso para o motor de batalha encerrar imediatamente a partida, declarando empate independentemente do estado atual.

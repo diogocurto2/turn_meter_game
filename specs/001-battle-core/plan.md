@@ -73,117 +73,178 @@ O projeto CLI **não implementa nenhuma lógica de domínio**. Ele apenas:
 
 ## Planned Classes and Functions by User Story
 
+
 ### US1 – Listar Personagens Disponíveis
-| Classe                        | Função/Método                        | Descrição/responsabilidade principal                 |
-|-------------------------------|--------------------------------------|------------------------------------------------------|
-| Character                     | (construtor, propriedades)           | Representa um personagem individual                  |
-| DeckService                   | GerarDeck(distintoPara: string)      | Gera um deck distinto para jogador ou CPU            |
-| Deck                          | (propriedades, métodos de acesso)    | Estrutura de dados para armazenar personagens        |
-| CLIController                 | ObterDeck()                          | Chama DeckService, exibe lista no CLI                |
-| CLIController                 | MostrarDetalhesPersonagem(ID)        | Exibe detalhes de um personagem do deck no CLI       |
-| TeamSelectionService          | SelecionarTime(jogadorOuCPU, deck)   | Permite seleção de time a partir de um deck          |
-| TeamSelectionService          | ListarTimesCPU()                     | Retorna possíveis times gerados para a CPU           |
-| Team                          | (propriedades, métodos de acesso)    | Estrutura de dados para armazenar o time             |
-| CLIController                 | ListarTimesCPU()                     | Exibe no CLI os times possíveis da CPU               |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                 |
+|------------------------------|--------------------------------------|----------------------|------------------------------------------------------|
+| CharacterData                | (propriedades)                       | ScriptableObject     | Dados base/configuração do personagem                |
+| Character                    | (construtor, propriedades, métodos)  | MonoBehaviour        | Instância viva do personagem em cena                 |
+| DeckService                  | GerarDeck(distintoPara: string)      | Classe pura (POCO)   | Gera um deck distinto para jogador ou CPU            |
+| Deck                         | (propriedades, métodos de acesso)    | Classe pura (POCO)   | Estrutura de dados para armazenar personagens        |
+| CLIController                | ObterDeck()                          | Classe pura (POCO)   | Chama DeckService, exibe lista no CLI                |
+| CLIController                | MostrarDetalhesPersonagem(ID)        | Classe pura (POCO)   | Exibe detalhes de um personagem do deck no CLI       |
+| TeamSelectionService         | SelecionarTime(jogadorOuCPU, deck)   | Classe pura (POCO)   | Permite seleção de time a partir de um deck          |
+| TeamSelectionService         | ListarTimesCPU()                     | Classe pura (POCO)   | Retorna possíveis times gerados para a CPU           |
+| Team                         | (propriedades, métodos de acesso)    | Classe pura (POCO)   | Estrutura de dados para armazenar o time             |
+| CLIController                | ListarTimesCPU()                     | Classe pura (POCO)   | Exibe no CLI os times possíveis da CPU               |
+
+**Nota:**
+- `CharacterData` (ScriptableObject): asset de dados editável no editor, nunca instanciado em cena.
+- `Character` (MonoBehaviour): instanciado em cena, representa o personagem ativo na batalha e referencia um CharacterData.
+
 
 ### US2 – Seleção de Times: CPU vs Jogador
-| Classe                        | Função/Método                        | Descrição/responsabilidade principal                 |
-|-------------------------------|--------------------------------------|------------------------------------------------------|
-| CLIController                 | SelecionarTimeUsuario()              | Orquestra seleção de time pelo usuário via CLI       |
-| CLIController                 | SelecionarTimeCPU()                  | Seleção automática de time para CPU                  |
-| BattleManager                 | IniciarBatalha(timeUsuario, timeCPU) | Inicia a batalha com os times definidos              |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                 |
+|------------------------------|--------------------------------------|----------------------|------------------------------------------------------|
+| CLIController                | SelecionarTimeUsuario()              | Classe pura (POCO)   | Orquestra seleção de time pelo usuário via CLI       |
+| CLIController                | SelecionarTimeCPU()                  | Classe pura (POCO)   | Seleção automática de time para CPU                  |
+| BattleManager                | IniciarBatalha(timeUsuario, timeCPU) | MonoBehaviour        | Inicia a batalha com os times definidos              |
+
+
 
 
 ### US3 – Motor de Controle da Batalha
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| BattleManager    | IniciarBatalha(time1, time2)         | Inicia e controla o ciclo da batalha                |
-| BattleManager    | AvancarTurno()                       | Avança o turno, atualiza estados                    |
-| BattleManager    | ProcessarAcoes()                     | Processa ações dos personagens                      |
-| BattleManager    | VerificarFimDeBatalha()              | Checa condições de término                          |
-| BattleLog        | RegistrarEvento(evento)               | Registra eventos e ações ocorridas                  |
-| CLIController    | ExibirEstadoBatalha()                | Mostra estado atual da batalha no CLI               |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| BattleManager                | IniciarBatalha(time1, time2)         | MonoBehaviour        | Inicia e controla o ciclo da batalha                |
+| BattleManager                | AvancarTurno()                       | MonoBehaviour        | Avança o turno, atualiza estados                    |
+| BattleManager                | ProcessarAcoes()                     | MonoBehaviour        | Processa ações dos personagens                      |
+| BattleManager                | VerificarFimDeBatalha()              | MonoBehaviour        | Checa condições de término                          |
+| BattleManager                | IntegrarTurnMeter()                  | MonoBehaviour        | Integra o TurnMeter ao fluxo da batalha             |
+| BattleManager                | IntegrarBattleLog()                  | MonoBehaviour        | Gera e registra eventos no BattleLog                |
+| BattleLog                    | RegistrarEvento(evento: BattleEvent)  | Classe pura (POCO)   | Registra eventos e ações ocorridas                  |
+| BattleLog                    | ListarEventos() : List<BattleEvent>  | Classe pura (POCO)   | Retorna todos os eventos registrados                |
+| BattleLog                    | Limpar()                             | Classe pura (POCO)   | Limpa o log                                         |
+| TurnMeter                    | AtualizarTurnMeter()                 | Classe pura (POCO)   | Atualiza valores do turn meter                      |
+| TurnMeter                    | ProximoParaAgir() : Character        | Classe pura (POCO)   | Determina próximo personagem a agir                 |
+| CLIController                | ExibirEstadoBatalha()                | Classe pura (POCO)   | Mostra estado atual da batalha no CLI               |
+
+
 
 ### US4 – Timer de Tempo Real da Batalha
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| BattleTimer      | IniciarTimer(duracao)                 | Inicia o timer da batalha                           |
-| BattleTimer      | VerificarTimeout()                    | Checa se o tempo expirou                            |
-| BattleManager    | EncerrarPorTimeout()                  | Encerra batalha por tempo                           |
-| CLIController    | ExibirTempoRestante()                 | Mostra tempo restante no CLI                        |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| BattleTimer                  | IniciarTimer(duracao)                | MonoBehaviour        | Inicia o timer da batalha                           |
+| BattleTimer                  | VerificarTimeout()                   | MonoBehaviour        | Checa se o tempo expirou                            |
+| BattleManager                | EncerrarPorTimeout()                 | MonoBehaviour        | Encerra batalha por tempo                           |
+| CLIController                | ExibirTempoRestante()                | Classe pura (POCO)   | Mostra tempo restante no CLI                        |
+
 
 ### US5 – Turn Meter System
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| TurnMeter        | AtualizarTurnMeter()                  | Atualiza valores do turn meter                      |
-| TurnMeter        | ProximoParaAgir()                     | Determina próximo personagem a agir                 |
-| BattleManager    | IntegrarTurnMeter()                   | Integra turn meter ao fluxo da batalha              |
-| CLIController    | ExibirOrdemTurnos()                   | Mostra ordem de ação dos personagens no CLI         |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| TurnMeter                    | AtualizarTurnMeter()                  | Classe pura (POCO)   | Atualiza valores do turn meter                      |
+| TurnMeter                    | ProximoParaAgir()                     | Classe pura (POCO)   | Determina próximo personagem a agir                 |
+| BattleManager                | IntegrarTurnMeter()                   | MonoBehaviour        | Integra turn meter ao fluxo da batalha              |
+| CLIController                | ExibirOrdemTurnos()                   | Classe pura (POCO)   | Mostra ordem de ação dos personagens no CLI         |
+
 
 ### US6 – Escolha de Ação
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| ActionSelector   | ListarAcoesDisponiveis(personagem)    | Lista ações possíveis para o personagem             |
-| ActionSelector   | SelecionarAcao(personagem, acao)      | Permite seleção de ação pelo usuário/CPU            |
-| BattleManager    | ExecutarAcao(personagem, acao)        | Executa ação escolhida                              |
-| CLIController    | ExibirAcoesDisponiveis()              | Mostra opções de ação no CLI                        |
-| CLIController    | SelecionarAcao()                      | Seleciona uma acao do usuario, do CPU a acao é selecionada automaticamente                      |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| ActionSelector               | ListarAcoesDisponiveis(personagem)    | Classe pura (POCO)   | Lista ações possíveis para o personagem             |
+| ActionSelector               | SelecionarAcao(personagem, acao)      | Classe pura (POCO)   | Permite seleção de ação pelo usuário/CPU            |
+| BattleManager                | ExecutarAcao(personagem, acao)        | MonoBehaviour        | Executa ação escolhida                              |
+| CLIController                | ExibirAcoesDisponiveis()              | Classe pura (POCO)   | Mostra opções de ação no CLI                        |
+| CLIController                | SelecionarAcao()                      | Classe pura (POCO)   | Seleciona uma acao do usuario, do CPU a acao é selecionada automaticamente |
+
 
 ### US7 – Seleção de Alvo
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| TargetSelector   | ListarAlvosValidos(personagem)        | Lista alvos possíveis para ação                     |
-| TargetSelector   | SelecionarAlvo(personagem, alvos)     | Permite seleção de alvo pelo usuário/CPU            |
-| BattleManager    | ValidarAlvo(alvo)                     | Valida se alvo é permitido                          |
-| CLIController    | ExibirAlvosDisponiveis()              | Mostra opções de alvo no CLI                        |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| TargetSelector               | ListarAlvosValidos(personagem)        | Classe pura (POCO)   | Lista alvos possíveis para ação                     |
+| TargetSelector               | SelecionarAlvo(personagem, alvos)     | Classe pura (POCO)   | Permite seleção de alvo pelo usuário/CPU            |
+| BattleManager                | ValidarAlvo(alvo)                     | MonoBehaviour        | Valida se alvo é permitido                          |
+| CLIController                | ExibirAlvosDisponiveis()              | Classe pura (POCO)   | Mostra opções de alvo no CLI                        |
+
 
 ### US8 – Affinity and Archetype Effects
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| CharacterRules   | CalcularAfinidade(atacante, alvo)     | Calcula bônus/penalidade de afinidade               |
-| CharacterRules   | CalcularArquetipo(personagem)         | Aplica efeitos de arquétipo                         |
-| BattleManager    | IntegrarAfinidadeArquetipo()          | Integra regras ao fluxo de dano/ação                |
-| CLIController    | ExibirEfeitosAfinidade()              | Mostra efeitos de afinidade/arquetipo no CLI        |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| CharacterRules               | CalcularAfinidade(atacante, alvo)     | Classe pura (POCO)   | Calcula bônus/penalidade de afinidade               |
+| CharacterRules               | CalcularArquetipo(personagem)         | Classe pura (POCO)   | Aplica efeitos de arquétipo                         |
+| BattleManager                | IntegrarAfinidadeArquetipo()          | MonoBehaviour        | Integra regras ao fluxo de dano/ação                |
+| CLIController                | ExibirEfeitosAfinidade()              | Classe pura (POCO)   | Mostra efeitos de afinidade/arquetipo no CLI        |
+
 
 ### US9 – Execução do Ataque
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| AttackService    | ExecutarAtaque(atacante, alvo)        | Realiza cálculo e aplicação de dano                 |
-| BattleManager    | ProcessarAtaque()                     | Orquestra execução do ataque                        |
-| CLIController    | ExibirResultadoAtaque()               | Mostra resultado do ataque no CLI                   |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| AttackService                | ExecutarAtaque(atacante, alvo)        | Classe pura (POCO)   | Realiza cálculo e aplicação de dano                 |
+| BattleManager                | ProcessarAtaque()                     | MonoBehaviour        | Orquestra execução do ataque                        |
+| CLIController                | ExibirResultadoAtaque()               | Classe pura (POCO)   | Mostra resultado do ataque no CLI                   |
+
 
 ### US10 – Morte de Personagem
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| DefeatService    | VerificarMorte(personagem)            | Checa se personagem foi derrotado                   |
-| BattleManager    | RemoverPersonagem(personagem)         | Remove personagem da batalha                        |
-| CLIController    | ExibirMensagemMorte()                 | Mostra mensagem de derrota no CLI                   |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| DefeatService                | VerificarMorte(personagem)            | Classe pura (POCO)   | Checa se personagem foi derrotado                   |
+| BattleManager                | RemoverPersonagem(personagem)         | MonoBehaviour        | Remove personagem da batalha                        |
+| CLIController                | ExibirMensagemMorte()                 | Classe pura (POCO)   | Mostra mensagem de derrota no CLI                   |
+
 
 ### US11 – Passar a Vez Automaticamente
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| AutoPassService  | VerificarAcoesPossiveis(personagem)   | Checa se personagem pode agir                       |
-| AutoPassService  | PassarVez(personagem)                 | Passa a vez automaticamente                         |
-| BattleManager    | IntegrarAutoPass()                    | Integra lógica de auto-pass ao fluxo                |
-| CLIController    | ExibirMensagemPassarVez()             | Mostra mensagem de turno pulado no CLI              |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| AutoPassService              | VerificarAcoesPossiveis(personagem)   | Classe pura (POCO)   | Checa se personagem pode agir                       |
+| AutoPassService              | PassarVez(personagem)                 | Classe pura (POCO)   | Passa a vez automaticamente                         |
+| BattleManager                | IntegrarAutoPass()                    | MonoBehaviour        | Integra lógica de auto-pass ao fluxo                |
+| CLIController                | ExibirMensagemPassarVez()             | Classe pura (POCO)   | Mostra mensagem de turno pulado no CLI              |
+
 
 ### US12 – Log de Ações
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| BattleLog        | RegistrarEvento(evento)               | Registra evento de ação, morte, fim de batalha      |
-| BattleLog        | ListarEventos()                       | Lista eventos registrados                           |
-| CLIController    | ExibirLogBatalha()                    | Mostra log de ações no CLI                          |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| BattleLog                    | RegistrarEvento(evento)               | Classe pura (POCO)   | Registra evento de ação, morte, fim de batalha      |
+| BattleLog                    | ListarEventos()                       | Classe pura (POCO)   | Lista eventos registrados                           |
+| CLIController                | ExibirLogBatalha()                    | Classe pura (POCO)   | Mostra log de ações no CLI                          |
+
 
 ### US13 – Análise de Fim de Batalha
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| EndOfBattleService| VerificarFimDeBatalha()              | Checa condições de vitória, derrota ou empate       |
-| BattleManager    | EncerrarBatalha(resultado)            | Finaliza batalha e define resultado                 |
-| CLIController    | ExibirResultadoFinal()                | Mostra resultado final no CLI                       |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| EndOfBattleService           | VerificarFimDeBatalha()               | Classe pura (POCO)   | Checa condições de vitória, derrota ou empate       |
+| BattleManager                | EncerrarBatalha(resultado)            | MonoBehaviour        | Finaliza batalha e define resultado                 |
+| CLIController                | ExibirResultadoFinal()                | Classe pura (POCO)   | Mostra resultado final no CLI                       |
+
 
 ### US14 – Resetar Partida ao Final
-| Classe           | Função/Método                        | Descrição/responsabilidade principal                |
-|------------------|--------------------------------------|-----------------------------------------------------|
-| MatchResetService| ResetarPartida()                      | Reinicia o fluxo de seleção e batalha               |
-| BattleManager    | IntegrarReset()                       | Integra lógica de reset ao ciclo principal          |
-| CLIController    | ExibirOpcaoReset()                    | Mostra opção de resetar partida no CLI              |
+| Classe/Asset                  | Função/Método                        | Tipo Unity           | Descrição/responsabilidade principal                |
+|------------------------------|--------------------------------------|----------------------|-----------------------------------------------------|
+| MatchResetService            | ResetarPartida()                      | Classe pura (POCO)   | Reinicia o fluxo de seleção e batalha               |
+| BattleManager                | IntegrarReset()                       | MonoBehaviour        | Integra lógica de reset ao ciclo principal          |
+| CLIController                | ExibirOpcaoReset()                    | Classe pura (POCO)   | Mostra opção de resetar partida no CLI              |
+
+
+
+#### Contratos Públicos e Eventos
+
+**BattleManager**
+- Propriedades: EstadoAtual (BattleState), Time1, Time2, TurnoAtual, Log (BattleLog)
+- Eventos: OnBattleStarted, OnTurnAdvanced, OnActionProcessed, OnBattleEnded
+
+**BattleLog**
+- Estrutura de evento (BattleEvent):
+	- Timestamp
+	- TipoEvento (ex: "Ataque", "Morte", "TurnoAvancado", "FimDeBatalha")
+	- Descrição
+	- Dados adicionais (ex: IDs dos personagens envolvidos)
+
+**Exemplo de evento:**
+```json
+{
+	"Timestamp": "2026-03-31T20:00:00Z",
+	"TipoEvento": "Ataque",
+	"Descricao": "Alice atacou Bob causando 120 de dano.",
+	"Dados": { "AtacanteId": 1, "AlvoId": 2, "Dano": 120 }
+}
+```
+
+**TurnMeter**
+- Propriedades: Lista de personagens e seus valores de turn meter
+- Métodos: AtualizarTurnMeter(), ProximoParaAgir()
+
+**Critérios de Sucesso (mensuráveis):**
+- 100% dos eventos relevantes da batalha são registrados no BattleLog
+- O método ProximoParaAgir() sempre retorna o personagem correto conforme o estado do TurnMeter
+- O ciclo de batalha executa do início ao fim sem intervenção manual
