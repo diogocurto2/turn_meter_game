@@ -53,15 +53,15 @@ src/
 
 #### CLI (TurnMeterGame.CLI)
 
-- O projeto CLI **não implementa nenhuma lógica de domínio**. Ele apenas:
-	- Recebe comandos do usuário (ex: iniciar batalha, listar personagens do deck, mostrar detalhes de personagem)
-	- Chama os serviços apropriados do domínio (ex: BattleManager, DeckService)
-	- Exibe o resultado no formato de interface de linha de comando (CLI)
-- O comando de iniciar batalha no CLI:
-	- Recebe um time do usuário e um time do CPU
-	- Chama o método de início de batalha do BattleManager
-	- Exibe o resultado da batalha para o usuário
-	- Toda a lógica de regras, sorteio, validação e fluxo está nos serviços de domínio (nunca no CLI)
+O projeto CLI **não implementa nenhuma lógica de domínio**. Ele apenas:
+- Recebe comandos do usuário (ex: iniciar batalha, listar personagens do deck, mostrar detalhes de personagem)
+- Chama os serviços apropriados do domínio (ex: BattleManager, DeckService)
+- Exibe o resultado no formato de interface de linha de comando (CLI)
+- Não toma decisões de lógica de jogo: toda decisão (ex: escolha de ação do CPU, regras de batalha, sorteio, validação) é feita nos serviços de domínio.
+
+**Validação e feedback de erro:**
+- Todas as entradas do usuário (seleção de personagem, time, ação, alvo) devem ser validadas pelo domínio.
+- O CLI deve apresentar mensagens de erro claras e amigáveis sempre que a entrada for inválida, orientando o usuário a tentar novamente.
 
 ## Implementation Notes
 

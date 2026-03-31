@@ -7,7 +7,7 @@
 
 ## User Scenarios & Testing *(mandatory)*
 ### User Story 1 - Escolha do Adversário e Deck do Jogador (Priority: P0)
-Ao iniciar o modo PvP, o sistema deve exibir 5 times adversários aleatórios (montados pela CPU, cada um com 4 personagens distintos). O jogador escolhe qual desses times deseja enfrentar. Após a escolha, a CPU gera um deck novo para o jogador, contendo 6 personagens aleatórios (sem repetições, de todos os personagens disponíveis no jogo).
+Ao iniciar o modo PvP, o sistema deve exibir 5 times adversários aleatórios (montados pela CPU, cada um com 4 personagens distintos, sem repetições dentro do mesmo time, mas podendo haver personagens repetidos entre times diferentes). O jogador escolhe qual desses times deseja enfrentar. Após a escolha, a CPU gera um deck novo para o jogador, contendo 8 personagens aleatórios (sem repetições, de todos os personagens disponíveis no jogo, podendo incluir personagens do time adversário escolhido).
 
 **Por que essa prioridade**: Garante variedade estratégica, permite ao jogador escolher o desafio e limita as opções do jogador, tornando cada partida única.
 
@@ -15,17 +15,17 @@ Ao iniciar o modo PvP, o sistema deve exibir 5 times adversários aleatórios (m
 
 **Cenários de Aceitação**:
 1. **Dado** que o modo PvP foi iniciado, **Quando** o sistema exibe os times adversários, **Então** o jogador pode escolher um dos 5 times para enfrentar.
-2. **Dado** que o jogador escolheu o time adversário, **Quando** o sistema gera o deck, **Então** o jogador recebe uma lista de 6 personagens aleatórios (sem repetições) para montar seu time.
+2. **Dado** que o jogador escolheu o time adversário, **Quando** o sistema gera o deck, **Então** o jogador recebe uma lista de 8 personagens aleatórios (sem repetições), podendo incluir personagens do time adversário escolhido.
 3. **Dado** que o deck do jogador foi definido, **Quando** a seleção de times começa, **Então** só é possível escolher personagens do respectivo deck, sem repetições.
 
 ### User Story 2 - Seleção de Times: Escolha do Adversário e Montagem do Time (Priority: P0)
-Após visualizar os 5 times adversários gerados pela CPU, o jogador escolhe um deles para lutar contra. Em seguida, o jogador monta seu próprio time de 4 personagens, escolhendo a partir do deck de 6 personagens aleatórios recebido.
+Após visualizar os 5 times adversários gerados pela CPU, o jogador escolhe um deles para lutar contra. Em seguida, o jogador monta seu próprio time de 4 personagens, escolhendo a partir do deck de 8 personagens aleatórios recebido.
 
 **Por que essa prioridade**: Garante que o jogador tenha agência na escolha do desafio e na montagem do seu time, além de preparar o cenário para a batalha central.
 
 **Cenários de Aceitação**:
 1. **Dado** que os 5 times adversários estão disponíveis, **Quando** o jogador escolhe um deles, **Então** esse time é definido como o adversário da partida.
-2. **Dado** que o jogador recebeu seu deck de 6 personagens, **Quando** monta seu time, **Então** só pode escolher 4 personagens distintos desse deck para formar seu time.
+2. **Dado** que o jogador recebeu seu deck de 8 personagens, **Quando** monta seu time, **Então** só pode escolher 4 personagens distintos desse deck para formar seu time.
 
 ### User Story 3 - Motor de Controle da Batalha (Priority: P0)
 O sistema deve possuir um motor central de batalha responsável por orquestrar o fluxo do combate: avançar turnos, atualizar o turn meter, acionar a escolha de ações, processar ataques, verificar mortes, registrar logs e determinar o fim da batalha.
@@ -141,7 +141,7 @@ Após cada ação (ataque, morte, fim de batalha), o sistema deve registrar e ex
 2. **Dado** que um personagem é derrotado, **Quando** isso ocorre, **Então** o log registra o evento.
 
 ### User Story 13 - Análise de Fim de Batalha (Priority: P2)
-Após cada ação, o sistema verifica se todos os personagens de um time foram derrotados. Se sim, a batalha termina e o resultado é apresentado (vitória, derrota ou empate).
+Após cada ação, o sistema verifica se todos os personagens de um time foram derrotados. Se sim, a batalha termina e o resultado é apresentado (vitória, derrota ou empate). Se ambos os times forem derrotados na mesma ação, o resultado é empate.
 
 **Por que essa prioridade**: Define o encerramento do ciclo de jogo e permite feedback imediato ao jogador.
 
@@ -166,10 +166,10 @@ Após o término da batalha, o sistema deve oferecer ao jogador a opção de res
 
 ### Edge Cases
 
-- What happens if both teams lose their last character in the same round? (Draw scenario)
+- What happens if both teams lose their last character in the same round? (Draw scenario: o resultado é empate)
 - How does the system handle a character with maximum speed versus minimum speed? (Turn frequency extremes)
 - What if a player tries to select an action for a defeated character? (Action should be blocked)
-- How are ties in turn meter resolved? (Consistent tiebreaker rule)
+- How are ties in turn meter resolved? (Consistent tiebreaker rule: em caso de empate, age primeiro o personagem do jogador; se ambos forem do mesmo lado, usar ordem de cadastro)
 
 ## Requirements *(mandatory)*
 
