@@ -6,28 +6,33 @@
 **Input**: User description: "Core battle system for turn-based combat game, with initial character roster, turn meter, affinities, archetypes, and attribute restrictions."
 
 ## User Scenarios & Testing *(mandatory)*
-### User Story 1 - Listar Personagens Disponíveis (Priority: P0)
-Ao iniciar o jogo ou o modo PvP, o sistema deve exibir a lista de personagens disponíveis (deck) para seleção. Tanto a CPU quanto o jogador devem receber decks distintos, definidos antes da escolha dos times. Nenhum dos decks pode conter todos os personagens do jogo; cada partida pode ter decks diferentes.
+### User Story 1 - Escolha do Adversário e Deck do Jogador (Priority: P0)
+Ao iniciar o modo PvP, o sistema deve exibir 5 times adversários aleatórios (montados pela CPU, cada um com 4 personagens distintos). O jogador escolhe qual desses times deseja enfrentar. Após a escolha, a CPU gera um deck novo para o jogador, contendo 6 personagens aleatórios (sem repetições, de todos os personagens disponíveis no jogo).
 
-**Por que essa prioridade**: Garante variedade, estratégia e evita repetição de partidas, além de ser pré-requisito para a seleção de times.
+**Por que essa prioridade**: Garante variedade estratégica, permite ao jogador escolher o desafio e limita as opções do jogador, tornando cada partida única.
 
-**Teste Independente**: Ao carregar o modo PvP, o sistema exibe decks distintos para CPU e jogador, cada um com um subconjunto dos personagens totais, e nenhum personagem aparece em ambos os decks.
+**Teste Independente**: Ao iniciar o modo PvP, o jogador vê 5 times adversários distintos para escolher. Após escolher o adversário, recebe um deck de 6 personagens aleatórios para montar seu próprio time.
 
 **Cenários de Aceitação**:
-1. **Dado** que o modo PvP foi iniciado, **Quando** o sistema carrega os decks, **Então** CPU e jogador recebem listas distintas de personagens disponíveis.
-2. **Dado** que os decks foram definidos, **Quando** a seleção de times começa, **Então** só é possível escolher personagens do respectivo deck, sem repetições entre CPU e jogador.
+1. **Dado** que o modo PvP foi iniciado, **Quando** o sistema exibe os times adversários, **Então** o jogador pode escolher um dos 5 times para enfrentar.
+2. **Dado** que o jogador escolheu o time adversário, **Quando** o sistema gera o deck, **Então** o jogador recebe uma lista de 6 personagens aleatórios (sem repetições) para montar seu time.
+3. **Dado** que o deck do jogador foi definido, **Quando** a seleção de times começa, **Então** só é possível escolher personagens do respectivo deck, sem repetições.
 
-### User Story 2 - Seleção de Times: CPU vs Jogador (Priority: P1)
-Antes do início da batalha, a CPU escolhe aleatoriamente seu time (sem personagens repetidos). Em seguida, o jogador escolhe seu time, sem poder selecionar personagens já escolhidos pela CPU. Nenhum dos times pode ter personagens repetidos.
+### User Story 2 - Seleção de Times: Escolha do Adversário e Montagem do Time (Priority: P0)
+Após visualizar os 5 times adversários gerados pela CPU, o jogador escolhe um deles para lutar contra. Em seguida, o jogador monta seu próprio time de 4 personagens, escolhendo a partir do deck de 6 personagens aleatórios recebido.
 
-**Por que essa prioridade**: Garante o fluxo básico de início de partida, previne conflitos de seleção e prepara o cenário para a batalha central.
+**Por que essa prioridade**: Garante que o jogador tenha agência na escolha do desafio e na montagem do seu time, além de preparar o cenário para a batalha central.
+
+**Cenários de Aceitação**:
+1. **Dado** que os 5 times adversários estão disponíveis, **Quando** o jogador escolhe um deles, **Então** esse time é definido como o adversário da partida.
+2. **Dado** que o jogador recebeu seu deck de 6 personagens, **Quando** monta seu time, **Então** só pode escolher 4 personagens distintos desse deck para formar seu time.
 
 ### User Story 3 - Motor de Controle da Batalha (Priority: P0)
 O sistema deve possuir um motor central de batalha responsável por orquestrar o fluxo do combate: avançar turnos, atualizar o turn meter, acionar a escolha de ações, processar ataques, verificar mortes, registrar logs e determinar o fim da batalha.
 
 **Por que essa prioridade**: Garante que todas as regras e etapas do combate sejam executadas de forma ordenada, robusta e previsível, evitando inconsistências e bugs de fluxo.
 
-**Teste Independente**: Ao iniciar uma batalha, o motor executa automaticamente todas as etapas do combate, do início ao fim, sem necessidade de intervenção manual entre as fases.
+**Teste Independente**: Ao iniciar uma batalha, o motor executa automaticamente todas as etapas do combate, do início ao fim, sem necessidade de intervenção manual entre as fases. para iniciar a batalha, o motor inicia com o time da cpu escolhida e com o time do usuario escolhido
 
 **Cenários de Aceitação**:
 1. **Dado** que uma batalha foi iniciada, **Quando** o motor é acionado, **Então** ele executa o ciclo completo de turnos, ações, verificações e encerramento.
